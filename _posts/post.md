@@ -1,6 +1,6 @@
 ---
 title: First Post
-date: 08/09/2024
+date: 2024-09-08 14:29:00
 categories: [test, test2]
 tags: [tag1, tag2, tag3]
 ---
