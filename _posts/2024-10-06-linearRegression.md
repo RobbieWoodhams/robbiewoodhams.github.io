@@ -14,13 +14,13 @@ Linear regression is a statistical method to model the relationship between a de
 
 In simple terms, we try to fit a straight line to the data points, where the line represents the best possible prediction for y given any value of x. The relationship is captured by the formula:
 
-y = mx + c
+$$y = mx + c$$
 
 Linear regression is a key technique in machine learning and data analysis, used in applications ranging from predicting sales to understanding economic trends.
 
 ## Formula Breakdown
 
-### Equation of a Line: y = mx + c
+### Equation of a Line: $$y = mx + c$$
 - m (slope): Represents the rate of change in y for a unit increase in x.
 - c (intercept): The value of y when x equals zero.
 
@@ -46,7 +46,7 @@ So how do we try to fit a straight line through the data points, where the line 
 
 This means our initial line equation is:
 
-y = 0x + 0  ⟹ ŷ = 0
+$$y = 0x + 0  ⟹ ŷ = 0$$
 
 >**Note:**
 > ŷ (y hat) is the predicted value of y 
@@ -54,7 +54,7 @@ y = 0x + 0  ⟹ ŷ = 0
 
 Using the data set and our initial line equation we can figure out our initial predicted values for each point.
 
-| Hours Studied (x) | Exam Score (y) | Predicted Score (ŷ = 0)
+| Hours Studied (x) | Exam Score (y) | Predicted Score 
 |----------|----------|----------|
 | 1   | 52   | 0   |
 | 2   | 56   | 0   |
@@ -101,7 +101,7 @@ $$
 
 Following our example of where we predicted the exam scores based on hours studied: 
 
-| Hours Studied (x) | Exam Score (y) | Predicted Score (ŷ = 0)
+| Hours Studied (x) | Exam Score (y) | Predicted Score 
 |----------|----------|----------|
 | 1   | 52   | 0   |
 | 2   | 56   | 0   |
@@ -225,15 +225,21 @@ $$ = -\frac{2}{5} \cdot 931 = -2 \cdot 186.2 = -372.4$$
 
 ### Step 4: Gradient with respect to c
 
-Using formula $$ \frac{\partial MSE}{\partial m} = -\frac{2}{n} \sum_{i=1}^{n} (y_i - (mx_i + c))$$
+Using formula $$ \frac{\partial MSE}{\partial c} = -\frac{2}{n} \sum_{i=1}^{n} (y_i - (mx_i + c))$$
 
-$$ \frac{\partial MSE}{\partial m} = -\frac{2}{n} [(52 - 0) + (56 - 0) + (60 - 0) + (63 - 0) + (67 - 0)]$$
+$$ \frac{\partial MSE}{\partial c} = -\frac{2}{n} [(52 - 0) + (56 - 0) + (60 - 0) + (63 - 0) + (67 - 0)]$$
 
 $$ = -\frac{2}{5} [52 + 56 + 60 + 63 + 67]$$
 
 $$ = -\frac{2}{5} \cdot 298 = -2 \cdot 59.6 = -119.2$$
 
 ### Step 5: Update m and c
+
+These are the update formulas for m and c respectively:
+
+$$m_{\text{new}} = m_{\text{old}} - α \cdot \frac{\partial MSE}{\partial m}$$
+
+$$c_{\text{new}} = c_{\text{old}} - α \cdot \frac{\partial MSE}{\partial c}$$
 
 Lets choose a learning rate α = 0.01 and use the gradients to update m and c:
 
@@ -253,13 +259,53 @@ $$m = 3.724, c = 1.192$$
 
 Now that we have updated m and c, we can use these new values to recalculate predictions, update the gradients, and continue iterating until the values of m and c converge to values that minimise the error.
 
+With our new values we can create new predictions for the dataset.
+
+| Hours Studied (x) | Exam Score (y) | Predicted Score 
+|----------|----------|----------|
+| 1   | 52   | 4.916   |
+| 2   | 56   | 8.64   |
+| 3   | 60   | 12.364   |
+| 4   | 63   | 16.088   |
+| 5   | 67   | 19.812   |
+
+MSE of second iteration:
+
+$$MSE = 2231$$
+
+As we can see the predicted score still does not match as shown by the MSE being relatively high. However the MSE is lower than the previous iteration showing we are converging to the optimal linear regression.
+
+We then fill out the partial derivatives of the MSE with respect to m and c again to get:
+
+$$ \frac{\partial MSE}{\partial m} = -283.32$$
+
+$$ \frac{\partial MSE}{\partial c} = -94.47$$
+
+Now using the update formula with a learning rate α = 0.01:
+
+$$ m_{\text{new}} = 3.724 - 0.01 \cdot (-283.32) = 3.724 + 2.8332 = 6.5572$$
+
+$$ c_{\text{new}} = 1.192 - 0.01 \cdot (-94.47) = 1.192 + 0.9447 = 2.1367 $$
+
+So, the second iteration of m and c are:
+
+$$m = 6.5572, c = 2.1367$$
+
 ### Step 7: Final Predicted Equation
 
-After several iterations, the values of m and c will converge, and we will find the optimal values that minimise the MSE. This gives us the final linear regression equation: 
+After 1000 iterations, the values of m and c will converge, and we will find the optimal values that minimise the MSE. This gives us the final linear regression equation: 
 
-$$ y = 3.724x + 1.192$$
+$$ y = 4.11x + 47$$
+
+where:
+
+$$m = 4.11, c = 47$$
 
 This equation can now be used to predict exam scores based on hours studied.
+
+
+
+
 
 # Conclusion
 
