@@ -207,4 +207,92 @@ Thus since $$P(spam ∣ lottery) > P(not spam ∣ lottery)$$, we classify the em
 
 # Naive Bayesian Classification
 
-Naive Bayesian Classification is 
+Naive Bayesian Classification refers to the simplifying assumption that all features are conditionally independent of each other, given the class label. This assumption is called naïve because it simplifies the real-world scenario where features like words in a document might actually be correlated, but the model ignores those dependencies to make the computation easier.
+
+To put simply normal Bayesian Classification accounts for the possible relationships between words, making it more complex and computationally intensive but more accurate when features are related. On the other hand Naive Bayes assumes that each word contributes independently and ignores the words potential relationships.
+
+Here is the formula for Naive Bayes Classification:
+
+$$P(C ∣ X) \propto P(C) \prod_{i=1}^{n} P(X_i ∣ C)$$
+
+Where: 
+- P(C ∣ X) is the posterior probability of class C given the feature set $$X = (X_1, X_2, ..., X_n)$$
+- P(C) is the prior probability of class C
+- $$P(X_i ∣ C)$$ is the likelihood of feature $$X_i$$ given C
+- $$\prod_{i=1}^{n}$$ represents the product of all the likelihoods for each feature $$X_i$$, from 1 to n (the total number of features)
+
+The formula basically says the probability of class C given feature set X is directly proportional to the product of all features likelihoods times the prior probability.
+
+## Example: Classifying Spam or not Spam Emails with multiple words
+
+Lets go through another example to understand how to use this formula. Again we have an email and want to determine whether it is spam or not spam based on the occurence of these words:
+
+- Winner
+- Lottery
+- Friend
+- Money
+
+### Step 1: Prior probabilities
+
+We will start with the same prior probabilities as before for each class:
+
+- P(spam) = 0.30
+- P(not spam) = 0.70
+
+### Step 2: Likelihood
+
+Next, we calculate the likelihoods for each word in both the spam and not spam categories. These likelihoods are learned from previous data, for this example we will make up random values.
+
+#### Spam:
+
+- P(winner ∣ spam) = 0.80
+- P(lottery ∣ spam) = 0.90
+- P(friend ∣ spam) = 0.40
+- P(money ∣ spam) = 0.70
+
+#### Not Spam:
+
+- P(winner ∣ not spam) = 0.10
+- P(lottery ∣ not spam) = 0.05
+- P(friend ∣ not spam) = 0.60
+- P(money ∣ not spam) = 0.20
+
+### Step 3: Calculate Posterior Probability for Each Class
+
+Using Naive Bayes, we assume the words are conditionally independent, so we multiply the probabilities of each word appearing, given the class (spam or not spam). We use Bayes' Rule to compute the posterior probabilities of each class.
+
+#### For Spam:
+
+$$P(spam ∣ winner, lottery, friend, money) = \frac{P(spam) \cdot P(winner ∣ spam) \cdot P(lottery ∣ spam) \cdot P(friend ∣ spam) \cdot P(money ∣ spam)}{P(winner, lottery, friend, money)}$$
+
+#### Substituting values:
+
+$$P(spam ∣ winner, lottery, friend, money) = \frac{0.30 \cdot 0.80 \cdot 0.90 \cdot 0.40 \cdot 0.70}{P(winner, lottery, friend, money)}$$
+
+#### Calculating the Numerator:
+
+$$0.30 \cdot 0.80 \cdot 0.90 \cdot 0.40 \cdot 0.70 = 0.06048$$
+
+#### For Not Spam:
+
+$$P(not spam ∣ winner, lottery, friend, money) = \frac{P(not spam) \cdot P(winner ∣ not spam) \cdot P(lottery ∣ not spam) \cdot P(friend ∣ not spam) \cdot P(money ∣ not spam)}{P(winner, lottery, friend, money)}$$
+
+#### Substituting values:
+
+$$P(not spam ∣ winner, lottery, friend, money) = \frac{0.70 \cdot 0.10 \cdot 0.05 \cdot 0.60 \cdot 0.20}{P(winner, lottery, friend, money)}$$
+
+#### Calculating the Numerator:
+
+$$0.70 \cdot 0.10 \cdot 0.05 \cdot 0.60 \cdot 0.20 = 0.00042$$
+
+### Step 4: Calculate the Evidence (Denominator)
+
+The denominator P(winner, lottery, friend, money) is the same for both classes. Since we only care about comparing two classes, we dont need to compute it directly. This is why the denominator is missing in the formula mentioned above. As a result we only compare the numerators.
+
+### Step 5: Compare the Posterior probabilities
+
+$$P(spam ∣ winner, lottery, friend, money) \propto 0.06048$$
+
+$$P(not spam ∣ winner, lottery, friend, money) \propto 0.00042$$
+
+Since 0.06048 is much larger than 0.00042, the email is far more likely to be classified as spam.
