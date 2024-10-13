@@ -296,3 +296,107 @@ $$P(spam ∣ winner, lottery, friend, money) \propto 0.06048$$
 $$P(not spam ∣ winner, lottery, friend, money) \propto 0.00042$$
 
 Since 0.06048 is much larger than 0.00042, the email is far more likely to be classified as spam.
+
+# Gaussian Naive Bayesian Classification
+
+Gaussian Naive Bayesian Classification differs to Naive Bayesian Classification as the input features are continuous rather than discrete. To break this down discrete data consists of distinct, separate values often represented as whole numbers or categories. For example number of students in a class, categoires like "spam" or "not spam", and number of emails received. 
+
+On the other hand, continuous data can take on any value within a given range. These values are measurable and can be represented by real numbers, including fractions and decimals. For example, height of a person (e.g. 170.5cm), temperature (e.g. 27.3°C), and weight (e.g. 83.2kg).
+
+In Gaussian Naive Bayes, the likelihoods are calculated using a probability density function (PDF), such as the Guassian distribution, because the number of possible values are infinite. Here is the formula:
+
+$$P(X_i | C) = \frac{1}{\sqrt{2\pi\sigma_C^2}} \exp\left( -\frac{(X_i - \mu_C)^2}{2\sigma_C^2} \right)$$
+
+Where:
+- $$X_i$$ is the feature value
+- $$\mu_C$$ is the mean for class C 
+- $$sigma_C^2$$ is the variance for class C (how much the data deviates from the mean value)
+- $$\exp$$ represents the exponential function ($$exp(x) = e^x$$)
+
+This formula describes the likelihood of observing a continuous feature $$X_i$$, given that the instance belongs to class C, assuming the feature follows a Gaussian distribution.
+
+## Example: Classifying a person as an adult or a child based on their weight
+
+We want to classify a person based on their weight into one of two classes: a child or an adult. We assume that the weights of adults and children follow a Gaussian (Normal) distribution.
+
+### Step 1: Training data
+
+From previous data, we know the following statistics about the weights and probabilities of adults and children:
+
+#### Adults
+
+- Mean weight: $$\mu_adult = 80kg$$ 
+- Variance of weight: $$sigma_adult^2 = 100kg^2$$ (standard deviation $$sigma_adult = 10kg$$)
+- Prior Probability of being an adult: P(adult) = 0.6
+
+#### Children
+
+- Mean weight: $$\mu_child = 30kg$$ 
+- Variance of weight: $$sigma_child^2 = 25kg^2$$ (standard deviation $$sigma_child = 5kg$$)
+- Prior Probability of being a child: P(child) = 0.4
+
+This data should be sourced from your dataset, however, as an example I have made up these values.
+
+### Step 2: New Data Point
+
+We are given a new person with a weight of 50kg. We want to determine if this person is more likely to be an adult or a child based on their weight.
+
+### Step 4: Calculating the Likelihood for Each Class
+
+#### For the Adult Class:
+
+We will use the Gaussian distribution formula to calculate the likelihood that a person is an adult based on their weight of 50kg.
+
+Lets substitute our data into the Guassian formula:
+
+$$P(weight = 50 | adult) = \frac{1}{\sqrt{2\pi\cdot 100}} \exp\left( -\frac{(50 - 80)^2}{2 \cdot 100} \right)$$
+
+Simplifying the terms:
+
+$$P(weight = 50 | adult) = \frac{1}{\sqrt{628.319}} \exp\left( -\frac{900}{200} \right)$$
+
+$$P(weight = 50 | adult) = \frac{1}{25.0663} \exp\left( -4.5 \right)$$
+
+$$P(weight = 50 | adult) = \frac{1}{25.0663} \cdot 0.111$$
+
+$$P(weight = 50 | adult) \approx 4.43 \times 10^{-3}$$
+
+#### For the Child Class:
+
+Again, we will use the Gaussian distribution formula to calculate the likelihood that a person is a child based on their weight of 50kg.
+
+Lets substitute our data into the Guassian formula:
+
+$$P(weight = 50 | child) = \frac{1}{\sqrt{2\pi\cdot 25}} \exp\left( -\frac{(50 - 30)^2}{2 \cdot 25} \right)$$
+
+Simplifying the terms:
+
+$$P(weight = 50 | child) = \frac{1}{\sqrt{157.08}} \exp\left( -\frac{400}{50} \right)$$
+
+$$P(weight = 50 | child) = \frac{1}{12.533} \exp\left( -8 \right)$$
+
+$$P(weight = 50 | child) = \frac{1}{12.533} \cdot 3.35463 \times 10^{-4}$$
+
+$$P(weight = 50 | child) \approx 2.68 \times 10^{-5}$$
+
+### Step 5: Input Prior Probabilities
+
+#### For Adult:
+
+$$P(weight = 50 | adult) \propto P(weight = 50 | adult) \cdot P(adult) = (4.43 \times 10^{-3}) \cdot 0.6 = 2.685 \times 10^{-3}$$
+
+#### For Child:
+
+$$P(weight = 50 | child) \propto P(weight = 50 | child) \cdot P(child) = (2.68 \times 10^{-5}) \cdot 0.4 = 1.072 \times 10^{-5}$$
+
+### Step 6: Compare the Results
+
+Since,
+
+$$P(weight = 50 | adult) = 2.685 \times 10^{-3} > P(weight = 50 | child) = 1.072 \times 10^{-5}$$
+
+We classify the person as an adult.
+
+# Conclusion
+
+Throughout this blog we have learned various classification techniques such as Bayesian Classification, Naive Bayesian Classification, and Gaussian Bayesian Classification. We also looked into how to use each method with an example following a step-by-step process that starts with a data set and results in classifying a feature. 
