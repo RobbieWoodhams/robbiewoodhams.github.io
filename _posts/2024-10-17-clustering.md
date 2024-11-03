@@ -42,7 +42,7 @@ Clustering is a data mining technique which groups unlabelled data based on thei
 
 K-Means is a hard clustering algorithm, meaning each data point belongs to exactly one cluster. Data points are assigned into K groups, where K represents the number of clusters based on the distance from each group's centroid.  The data points closest to a given centroid will be clustered under the same category. A larger K value will be indicative of smaller groupings with more granularity whereas a smaller K value will have larger groupings and less granularity. 
 
-K-Means is revolved around the Euclidean Disatnce formula, which measures the distance between two points $$P(x_1, y_1)$$ and $$Q(x_2, y_2)$$ and is given by:
+K-Means is revolved around the Euclidean Distance formula, which measures the distance between two points $$P(x_1, y_1)$$ and $$Q(x_2, y_2)$$ and is given by:
 
 $$d(P, Q) = \sqrt{\sum_{i=1}^{n} (q_i - p_i)^2}$$
 
@@ -90,7 +90,7 @@ Since we have chosen to cluster the customers into three groups (K = 3) we will 
 
 ### Step 2: Calculate the Distance to Centroids
 
-Now we use the Euclidean distance formula to find the Euclidean distance between each customer and all three centroids, using all three features (age, annual income, spending score)>
+Now we use the Euclidean distance formula to find the Euclidean distance between each customer and all three centroids, using all three features (age, annual income, spending score)
 
 The formula for Euclidean distance in a 3D space is:
 
@@ -523,6 +523,148 @@ After 3 iterations the centroids converge. here are the final cluster and centro
 
 
 # Gaussian Mixture Model (GMM) Clustering
+
+Gaussian Mixture Model (GMM) Clustering is a soft clustering algorithm, meaning that each data point is assigned to clusters based on the probability or likelihood that it belongs to each cluster, rather than assigning each data point to exactly one cluster like K-Means. GMM assumes that the data is generated from a mixture of several Gaussian distributions, each representing a cluster. Instead of assigning a data point to the nearest centroid, GMM assigns a probability to each point for belonging to each distribution (cluster).
+
+The primary formula for GMM Clustering is the Gaussian PDF formula as seen below, however, GMM also contains various other formulas and parameters which I will explain as we follow through an example.
+
+$$N(x \mid \mu, \Sigma) = \frac{1}{(2\pi)^{d/2} \lvert \Sigma \rvert^{1/2}} \exp\left( -\frac{1}{2} (x - \mu)^\top \Sigma^{-1} (x - \mu) \right)$$
+
+Where:
+- $$x$$ is the data point (a d-dimensional vector)
+- $$\mu$$ is the mean vector (center of the Gaussian distribution)
+- $$\Sigma$$ is the covariance matrix (describes the spread and shape of the distribution)
+- $$\lvert \Sigma \rvert$$ is the determinent of the covariance matrix
+- $$(x - \mu)^\top \Sigma^{-1} (x - \mu)$$ is the Mahalanobis distance between $$x$$ and the mean $$\mu$$
+
+We will break down the formula and its parameters more as we go through the example.
+
+
+
+## Example: Customer Segmentation
+
+Let us use the same data set as we did with K-Means.
+
+| Customer | Age | Annual Income (£k) | Spending Score |
+|----------|----------|----------|----------|
+| 1   | 25   | 40   | 75 |
+| 2   | 34   | 85   | 50 |
+| 3   | 22   | 60   | 95 |
+| 4   | 45   | 30   | 40 |
+| 5   | 50   | 200  | 30 |
+| 6   | 31   | 150  | 60 |
+| 7   | 23   | 45  | 88 |
+| 8   | 37   | 90  | 20 |
+| 9   | 29   | 70  | 77 |
+| 10   | 43   | 120  | 10 |
+
+Lets also cluster these customers into two groups (K = 2).
+
+### Step 1: Initialisation of Parameters
+
+Firstly, we need to initialise the means $$\mu_k$$, covariances $$\sigma_k$$, and weights $$\alpha_k$$ for each of the three Gaussian components (since K = 2). The initialisation provides a starting point for the iterative process.
+
+#### Means $$(\mu_1, \mu_2)$$
+
+The means represent the initial centres of the clusters. Like K-means, we can initialise the means by selecting some actual data points or we can use the K-Means centroids we figured out earlier. For this example lets choose two customers from different parts of the dataset to ensure a good spread.
+
+- $$\mu_1 = (25, 40, 75)$$ (Customer 1)
+- $$\mu_2 = (50, 200, 30)$$ (Customer 5)
+
+
+These choices ensures that the means are spread far apart, representing distinct parts of the data space. Customer 1 represents lower income and higher spending, while Customer 5 represents high income and low spending.
+
+#### Covariances $$(\sigma_1, \sigma_2)$$
+
+The covariance matrix describes the spread of the Gaussian distribution around each mean. Initially, we assume that each feature is independent (no correlation between age, income, and spending score), so we start with a diagonal covariance matrix where the values on the diagonal represent the variance of each feature. As a result the Covariance Matrix Structure will look like this:
+
+$$\Sigma = \begin{bmatrix} \sigma_{\text{Age}}^2 & 0 & 0 \\ 0 & \sigma_{\text{Income}}^2 & 0 \\ 0 & 0 & \sigma_{\text{Score}}^2 \end{bmatrix}$$
+
+We can compute the variance for each feature using the formula:
+
+$$\sigma^2 = \frac{1}{N} \Sigma(x_i - \mu)^2$$ 
+
+Where:
+- $$N$$ is the number of samples
+- $$X_i$$ are the individual data points
+- $$\mu$$ is the mean
+
+Lets compute the variances for each feature using the dataset.
+
+##### Age Variance:
+
+$$\mu_{\text{Age}} = \frac{25 + 34 + 22 + 45 + 50 + 31 + 23 + 37 + 29 + 43}{10}$$
+
+$$\mu_{\text{Age}} \approx 34 $$
+
+$$\sigma_{\text{Age}}^2 = \frac{1}{10}[(25 - 34)^2 + (34 - 34)^2 + (22 - 34)^2 + (45 - 34)^2 + (50 - 34)^2 + (31 - 34)^2 + (23 - 34)^2 + (37 - 34)^2 + (29 - 34)^2 + (43 - 34)^2]$$ 
+
+$$= \frac{1}{10}[81 + 0 + 144 + 121 + 256 + 9 + 121 + 9 + 25 + 81]$$ 
+
+$$= \frac{1}{10}[847]$$ 
+
+$$\sigma_{\text{Age}}^2 \approx 85$$ 
+
+##### Income Variance:
+
+$$\mu_{\text{Income}} = \frac{40 + 85 + 60 + 30 + 200 + 150 + 45 + 90 + 70 + 120}{10}$$
+
+$$\mu_{\text{Income}} = 89 $$
+
+$$\sigma_{\text{Income}}^2 = \frac{1}{10}[(40 - 89)^2 + (85 - 89)^2 + (60 - 89)^2 + (30 - 89)^2 + (200 - 89)^2 + (150 - 89)^2 + (45 - 89)^2 + (90 - 89)^2 + (70 - 89)^2 + (120 - 89)^2]$$ 
+
+$$= \frac{1}{10}[2401 + 16 + 841 + 3481 + 12321 + 3721 + 1936 + 1 + 361 + 961]$$ 
+
+$$= \frac{1}{10}[26040]$$ 
+
+$$\sigma_{\text{Income}}^2 = 2604$$ 
+
+##### Spending Score Variance:
+
+$$\mu_{\text{Score}} = \frac{75 + 50 + 95 + 40 + 30 + 60 + 88 + 20 + 77 + 10}{10}$$
+
+$$\mu_{\text{Score}} \approx 55 $$
+
+$$\sigma_{\text{Score}}^2 = \frac{1}{10}[(75 - 55)^2 + (50 - 55)^2 + (95 - 55)^2 + (40 - 55)^2 + (30 - 55)^2 + (60 - 55)^2 + (88 - 55)^2 + (20 - 55)^2 + (77 - 55)^2 + (10 - 55)^2]$$ 
+
+$$= \frac{1}{10}[400 + 25 + 1600 + 225 + 625 + 25 + 1089 + 1225 + 484 + 2025]$$ 
+
+$$= \frac{1}{10}[7723]$$ 
+
+$$\sigma_{\text{Score}}^2 \approx 772$$ 
+
+We now have the Initial Covariances:
+
+$$\Sigma_1 = \begin{bmatrix} 85 & 0 & 0 \\ 0 & 2604 & 0 \\ 0 & 0 & 772 \end{bmatrix}$$
+
+$$\Sigma_2 = \begin{bmatrix} 85 & 0 & 0 \\ 0 & 2604 & 0 \\ 0 & 0 & 772 \end{bmatrix}$$
+
+#### Weights $$(\alpha_1, \alpha_2)$$
+
+We start with equal weights for each Gaussian component, meaning we assume each cluster initially represents 50% of the data.
+
+$$\alpha_1 = \alpha_2 = 0.5$$
+
+
+### Step 2: Expectation Step (E-Step)
+
+The E-Step calculates the responsibility or probability that each point belongs to each cluster. It is calculated using this formula.
+
+$$r_{nk} = \frac{\pi_k \mathcal{N}(x_n | \mu_k, \Sigma_k)}{\sum_{j=1}^{K} \alpha_j \mathcal{N}(x_n | \mu_j, \Sigma_j)}$$
+
+Where:
+- $$r_{nk}$$ is the responsibility that component k takes for data point n 
+- $$\pi_k$$ is the mixing coefficient for component k 
+- $$\mathcal{N}(x_n | \mu_j, \Sigma_j)$$ is the Gaussian PDF for component k evaluated at data point $$X_n$$ with mean $$\mu_k$$ and covariance $$\Sigma_k$$
+- $$\sum_{j=1}^{K}$$ represents the summation over all components j of the Gaussian Mixture Model (GMM)
+- $$\alpha_j$$ is the weights
+
+#### Gaussian PDF 
+
+$$N(x \mid \mu, \Sigma) = \frac{1}{(2\pi)^{d/2} \lvert \Sigma \rvert^{1/2}} \exp\left( -\frac{1}{2} (x - \mu)^\top \Sigma^{-1} (x - \mu) \right)$$
+
+
+
 
 # Metrics for Evaluating Cluster Performance
 
