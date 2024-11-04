@@ -182,8 +182,80 @@ centroids = Dataset(randperm(num_points, k), :);
 ```
 
 Where:
-- k: Number of clusters (2 clusters for the two neighbourhood types)
-- max_iterations: The maximum number of iterations to avoid infinite loops if the algorithm doesnt converge.
-- [num_points, num_features] = size(Dataset): This line extracts the number of rows and columns in the matrix dataset and assigns them to two variables num_points and num_features.
-- centroids = Dataset(randperm(num_points, k), :): Thi line selects k random rows from the dataset to serve as the initial centroids for the K_Means clustering algorithm.
+- <strong> k </strong>: Number of clusters (2 clusters for the two neighbourhood types)
+- <strong> max_iterations </strong>: The maximum number of iterations to avoid infinite loops if the algorithm doesnt converge.
+- <strong> [num_points, num_features] = size(Dataset) </strong>: This line extracts the number of rows and columns in the matrix dataset and assigns them to two variables num_points and num_features.
+- <strong> centroids = Dataset(randperm(num_points, k), :) </strong>: This line selects k random rows from the dataset to serve as the initial centroids for the K_Means clustering algorithm. Lets break it down further.
 
+#### Line "centroids = Dataset(randperm(num_points, k), :)" Breakdown
+- randperm(num_points, k): randperm is a function that generates k random row indicies from num_points. For example, if num_points = 2000 and k = 2, randperm creates a randomly shuffled list of all integers from 1 to 2000 and then pick the first 2 numbers from the list. For instance, it may produce:
+
+```matlab
+[876, 1537, 125, 1892, 543, ..., 45]
+```
+
+So the values taken from this function in this instance would be [876, 1537].
+
+- <strong> Dataset(...) </strong>: Using these randomly chosen values [876, 1537], we select these specific rows from the Dataset.
+- The colon <strong> : </strong> means select all columns. So, Dataset(randperm(num_points, k), :) takes all columns for each chosen row.
+- <strong> centroids </strong> : If Dataset has 2000 rows and 2 columns (e.g., price and amenities), then Dataset(randperm(num_points, k), :) will return a k x 2 matrix. Given k = 2, centroids is a 2 x 2 matrix.
+
+### Step 2.B: Create the loop
+
+First we create a loop that iterates up until a max iteration count (max_iterations).
+
+```matlab
+for iter = 1:max_iterations
+    % Our k-Means algorithm will go in here
+end
+```
+Where:
+- <strong> iter </strong> is the loop counter
+
+### Step 2.C: Euclidean Distance
+
+Next we want to find the pairwise Euclidean distances between each data point and each centroid.
+
+```matlab
+    distances = pdist2(Dataset, centroids);
+```
+
+Where:
+- <strong> distances </strong> is a matrix where each row corresponds to a data point and each column corresponds to a centroid.
+- <strong> pdist2 </strong> is a function that calculates the pairwise Euclidean distances between each point in Dataset and each centroid.
+- <strong> Dataset </strong> is a matrix that contains 2000 rows (data points) and 2 columns (features: price and proximity).
+- <strong> centroids </strong> is a matrix with k rows (number of clusters) and 2 columns (features for each centoid).
+
+### Step 2.C: Find the Closest Centroid
+
+After finding all the Euclidean distances between each data point and centroid, we want to find which centroid is closest to each data point.
+
+```matlab
+    [~, cluster_assignments] = min(distances, [], 2);
+```
+
+Where:
+- <strong> min(distances, [], 2) </strong> : Finds the minimum value along each row of the distances matrix. 
+
+Since distances is a 2000 x 2 matrix where each row represents a data point and each column represents the distance to the centroid, this line goes through each row and finds the smallest value i.e. the cloest centroid. [] is an empty placeholder. 2 is the dimension argument. Its just the syntax for the min function.
+
+- <strong> [~, cluster_assignments] </strong> : Used to store the index of the minimum value.
+
+When min is called with two output arguments, it returns the value and the index. For example:
+
+```matlab
+[value, index] = min([3, 5, 2]);
+```
+
+Here, value would be 2 (the minimum), and index would be 3 (the position of 2 in the array).
+
+Since we dont need the actual distance between the data point and the centroids we can ignore the value by using <strong> ~ </strong> and continue to store the closest cluster.
+
+### Step 2.C: Centroid Update
+
+Now that we have the new closest centroids we need to update the centroids by finding the mean of each feature.
+
+```matlab
+new_centroids = arrayfun(@(i) mean(Dataset(cluster_assignments == i, :), 1), 1:k, 'UniformOutput', false);
+new_centroids = cell2mat(new_centroids');
+```
