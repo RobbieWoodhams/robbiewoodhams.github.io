@@ -123,7 +123,7 @@ hold off;
 
 ### Step 1.E: Results
 
-Here is the entire code to generate and plot the dataset:
+Here is the full code to generate and plot the dataset:
 
 ```matlab
 % Group 1 (Lower-priced neighbourhoods)
