@@ -163,7 +163,7 @@ legend('Lower-priced neighbourhoods', 'Higher-priced neighbourhoods');
 hold off;
 ```
 
-![KMeans generated dataset](assets/Kmeans-fig1.jpg)
+![KMeans generated dataset](assets/kmeans-fig1.jpg)
 
 ## Step 2: Implement K-Means Algorithm
 
@@ -259,3 +259,114 @@ Now that we have the new closest centroids we need to update the centroids by fi
 new_centroids = arrayfun(@(i) mean(Dataset(cluster_assignments == i, :), 1), 1:k, 'UniformOutput', false);
 new_centroids = cell2mat(new_centroids');
 ```
+
+Where:
+- <strong> arrayfun </strong> applies a function to each element of an array, with the syntax B = arrayfun(func,A). In this case it is applying the anonymous function <strong> @(i) ... </strong>  to each cluster index from 1 to k.
+
+- <strong> @(i) </strong> is an anonymous function that can accept multiple inputs and return one output. Here takes i (the cluster index) as an input (which comes from the array 1:k specified in the arrayfun function) and outputs the mean of all data points assigned to cluster i.
+
+- <strong> Dataset(cluster_assignments == i, :) </strong> selects all rows in Dataset where cluster_assignments == i.
+
+- <strong> mean(..., 1) </strong> calculates the mean of the selected rows along dimension 1 (columns), which gives the average values for each feature (e.g., property price and proximity). The result is a single row vector representing the mean position (centroid) for cluster i.
+
+- <strong> 'UniformOutput', false </strong> instructs MATLAB to store each output in a cell array, which can handle non-scalar outputs because the output is a row vector and not a scalar (single number), MATLAB cannot store it in a regular array without some adjustments.
+
+- <strong> cell2mat(new_centroids') </strong> converts the transposed cell array into a regular k x num_features matrix.
+
+#### Code Walkthrough
+
+Suppose k = 2, so 1:k is [1, 2].
+<strong> arrayfun </strong> calls the anonymous function <strong> @(i) mean(Dataset(cluster_assignments == i, :), 1) </strong> twice.
+
+- First call (i = 1): arrayfun passes i = 1 into the function
+    - <strong> Dataset(cluster_assignments == 1, :) </strong> selects all data points assigned to cluster 1.
+    - <strong> mean(..., 1) </strong> calculates the mean of these points along each feature (columns), giving the new centroid for cluster 1.
+
+- Second call (i = 2): arrayfun passes i = 2 into the function
+    - <strong> Dataset(cluster_assignments == 2, :) </strong> selects all data points assigned to cluster 2.
+    - <strong> mean(..., 1) </strong> calculates the mean of these points along each feature (columns), giving the new centroid for cluster 2.
+
+After both calls, arrayfun collects the results into a cell array where each cell contains the centroid for one cluster. Finally, cell2mat converts this cell array into a regular matrix of centroids.
+
+### Step 2.D: Convergence Check
+
+Now that we have our new centroids we need to check whether the centroids have stopped moving between iterations. In K-Means clustering, this is a signal that the algorithm has converged.
+
+```matlab
+if isequal(centroids, new_centroids)
+    break;
+end
+
+centroids = new_centroids;
+```
+
+Where:
+- <strong> isequal </strong> is a function that checks if two arrays are exactly the same. It returns true if the arrays are identical and false if not. Here it checks whether the centroids have converged and will exit the loop if they have by using <strong> break </strong>.
+
+- <strong> centroids = new_centroids </strong> updates the current centroids to the values in new_centroids. If the centroids have not converged this line assigns the newly calculated centroids for the next iteration.
+
+
+### Step 2.E: K-Means Algorithm
+
+Here is the entire code of the K-Means algorithm:
+
+```matlab
+% Step 3: Implement K-Means algorithm
+for iter = 1:max_iterations
+    distances = pdist2(Dataset, centroids);
+    [~, cluster_assignments] = min(distances, [], 2);
+
+    new_centroids = arrayfun(@(i) mean(Dataset(cluster_assignments == i, :), 1), 1:k, 'UniformOutput', false);
+    new_centroids = cell2mat(new_centroids');
+
+    if isequal(centroids, new_centroids)
+        break;
+    end
+
+    centroids = new_centroids;
+end
+```
+
+### Step 3: Visualise the Results
+
+Now that we have our K-Means algorithm we want to visualise our results. To do this we create a graph as we did before with the generated data set.
+
+```matlab
+figure;
+gscatter(Dataset(:,1), Dataset(:,2), cluster_assignments, 'rb', '.', 20); % Plot points by cluster
+hold on;
+scatter(centroids(:,1), centroids(:,2), 100, 'kx', 'LineWidth', 2); % Plot centroids as large black X's
+title('K-Means Clustering Results on Neighbourhood Data');
+xlabel('Average Property Price');
+ylabel('Proximity to Amenities');
+legend('Cluster 1', 'Cluster 2', 'Centroids');
+hold off;
+```
+
+Where: 
+- <strong> figure </strong> : This creates a new figure window in MATLAB
+- <strong> gscatter(Dataset(:,1), Dataset(:,2), cluster_assignments, 'rb', '.', 20); </strong>
+    - gscatter function: Creates a scatter plot where data points are grouped and coloured by category (cluster assignments, in this case).
+    - Dataset(:,1): Selects all rows in the first column of Dataset, representing the x-coordinates of the data points.
+    - Dataset(:,2): Selects all rows in the second column of Dataset, representing the y-coordinates of the data points.
+    - cluster_assignments: A vector that specifies the cluster assignment (1 or 2) for each data point in Dataset. MATLAB uses this vector to assign different colours to each cluster.
+    - 'rb': Specifies the colours for each cluster, with r for red and b for blue. The first cluster will be red, and the second cluster will be blue.
+    - '.': Specifies the marker style. '.' uses dot markers for the data points.
+    - '20': Specifies the dot thickness of each data point.
+- <strong> hold on </strong> :  This command keeps the existing plot (data points) so that we can add the centroids without erasing the current data points.
+- <strong> scatter(centroids(:,1), centroids(:,2), 100, 'kx', 'LineWidth', 2); </strong>
+    - scatter function: Creates a scatter plot for the centroids with more customisation.
+    - centroids(:,1): Selects all rows in the first column of centroids, representing the x-coordinates of the centroids.
+    - centroids(:,2): Selects all rows in the second column of centroids, representing the y-coordinates of the centroids.
+    - 100: Specifies the marker size. Here, the centroids are displayed as larger points to stand out.
+    - 'kx': Specifies the colour and marker type for the centroids. k means black, x means cross markers.
+    - 'LineWidth', 2: Sets the line width of the markers to 2, making the X’s bolder and more visible.
+- <strong> title('K-Means Clustering Results on Neighbourhood Data'); </strong> : Sets the title for the plot.
+- <strong> xlabel('Average Property Price'); </strong> : Adds a label to the x-axis of the plot.
+- <strong> ylabel('Proximity to Amenities'); </strong> : Adds a label to the y-axis of the plot.
+- <strong> legend('Cluster 1', 'Cluster 2', 'Centroids'); </strong> : Adds a legend to the plot
+- <strong> hold off </strong> : Releases the current figure, allowing future plotting commands to replace the existing plot.
+
+### Step 3.A: Results
+
+![KMeans results](assets/kmeans-fig2.jpg)
