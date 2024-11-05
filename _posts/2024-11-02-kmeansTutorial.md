@@ -163,7 +163,7 @@ legend('Lower-priced neighbourhoods', 'Higher-priced neighbourhoods');
 hold off;
 ```
 
-![KMeans generated dataset](assets/kmeans-fig1.jpg)
+![KMeans generated dataset](assets/kmeans-fig1.0.jpg)
 
 ## Step 2: Implement K-Means Algorithm
 
