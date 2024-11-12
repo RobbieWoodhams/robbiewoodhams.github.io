@@ -8,7 +8,7 @@ math: true
 
 # Introduction
 
-Welcome to the Gaussian Mixture Model Matlab Tutorial blog. In this blog we will break down how to apply the Gaussian Mixture Model algorithm in Matlab while using toolboxes and with not using toolboxes. This blog aims to add a practical perspective on the Gaussian Mixture Model following the theory blog on Exploring Clustering Methods. This blog will explain all code and confusing jargon, however, if you need a deeper understanding before delving into the practical applications, read the blog on Exploring Clustering Methods. Lets begin with the task we will be covering. 
+Welcome to the Gaussian Mixture Model Matlab Tutorial blog. In this blog we will break down how to apply the Gaussian Mixture Model algorithm in Matlab with and without toolboxes. This blog aims to add a practical perspective on the Gaussian Mixture Model following the theory blog on Exploring Clustering Methods. This blog will explain all code and confusing jargon, however, if you need a deeper understanding before delving into the practical applications, read the blog on Exploring Clustering Methods. Lets begin with the task we will be covering. 
 
 # Task Overview
 
@@ -187,7 +187,7 @@ k = 2; % Number of clusters
 % Randomly initialise means by selecting k random points
 initial_mu = datasample(data, k)';
 
-% Initialize variances with the overall variance of the data
+% Initialise variances with the overall variance of the data
 initial_sigma = std(data) * ones(1, k);
 
 % Set equal initial weights for each Gaussian component
