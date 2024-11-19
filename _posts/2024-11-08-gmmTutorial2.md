@@ -1,5 +1,5 @@
 ---
-title: Gaussian Mixture Model Matlab Tutorial
+title: Gaussian Mixture Model Matlab Tutorial - 2D
 date: 2024-11-06 18:00:00 +0000
 categories: [Machine Learning, Matlab Tutorial]
 tags: [Machine Learning, Clustering, Gaussian Mixture Model, Matlab Tutorial, ]
@@ -8,7 +8,7 @@ math: true
 
 # Introduction
 
-Welcome to the second Gaussian Mixture Model Matlab Tutorial blog. In this blog we will break down how to apply a multi-dimensional Gaussian Mixture Model in Matlab with and without toolboxes. This blog aims to add a practical perspective on the Gaussian Mixture Model following the theory blog on Exploring Clustering Methods. This blog will explain all code and confusing jargon, however, if you need a deeper understanding before delving into the practical applications, read the blog on Exploring Clustering Methods. Lets begin with the task we will be covering. 
+Welcome to the second Gaussian Mixture Model Matlab Tutorial blog. In this blog we will break down how to apply a multi-dimensional Gaussian Mixture Model in Matlab without the GMM toolbox. This blog aims to add a practical perspective on the Gaussian Mixture Model following the theory blog on Exploring Clustering Methods. This blog will explain all code and confusing jargon, however, if you need a deeper understanding before delving into the practical applications, read the blog on Exploring Clustering Methods. Lets begin with the task we will be covering. 
 
 # Task Overview
 
@@ -328,7 +328,7 @@ legend('Species X Data', 'Species Y Data', 'Species Z Data', 'Species X PDF', 'S
 hold off;
 ```
 
-![GMM generated dataset](assets/gmm2d-fig1.jpg)
+![GMM generated dataset](assets/clustering-tutorial/gmm2d-fig1.jpg)
 
 ## Step 2: Initialise Parameters for the GMM
 
@@ -757,4 +757,4 @@ hold off;
 
 Here are the final results of the converged GMM.
 
-![GMM Results](assets/gmm2d-fig2.jpg)
+![GMM Results](assets/clustering-tutorial/gmm2d-fig2.jpg)

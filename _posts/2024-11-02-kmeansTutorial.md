@@ -8,7 +8,7 @@ math: true
 
 # Introduction
 
-Welcome to the K-Means Matlab Tutorial blog. In this blog we will break down how to apply the K-Means algorithm in Matlab using toolboxes and not using toolboxes. This blog aims to add a practical perspective on the K-Means algorithm following the theory blog on Exploring Clustering Methods. This blog will explain all code and confusing jargon, however, if you need a deeper understanding before delving into the practical applications, read the blog on Exploring Clustering Methods. Lets begin with the task we will be covering. 
+Welcome to the K-Means Matlab Tutorial blog. In this blog we will break down how to apply the K-Means algorithm in Matlab without the KMeans toolbox. This blog aims to add a practical perspective on the K-Means algorithm following the theory blog on Exploring Clustering Methods. This blog will explain all code and confusing jargon, however, if you need a deeper understanding before delving into the practical applications, read the blog on Exploring Clustering Methods. Lets begin with the task we will be covering. 
 
 # Task Overview
 
@@ -163,7 +163,7 @@ legend('Lower-priced neighbourhoods', 'Higher-priced neighbourhoods');
 hold off;
 ```
 
-![KMeans generated dataset](assets/kmeans-fig1.0.jpg)
+![KMeans generated dataset](assets/clustering-tutorial/kmeans-fig1.0.jpg)
 
 ## Step 2: Implement K-Means Algorithm
 
@@ -369,4 +369,4 @@ Where:
 
 ### Step 3.A: Results
 
-![KMeans results](assets/kmeans-fig2.jpg)
+![KMeans results](assets/clustering-tutorial/kmeans-fig2.jpg)
