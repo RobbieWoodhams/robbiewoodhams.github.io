@@ -101,7 +101,7 @@ This will create our react project in a folder named frontend.
 
 ## Step 10: .gitignore .env files
 
-Now that we have our structure set up we can create a .gitignore and .env file
+Now that we have our structure set up we can create a .gitignore and .env file. Create the .env file in the backend folder we will store sensitive information in it in later tutorials.
 
 In the .gitignore file add:
 
