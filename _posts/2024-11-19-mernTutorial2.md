@@ -8,7 +8,7 @@ math: true
 
 # Introduction
 
-Welcome to the second edition of the MERN Tutorial series. In this blog, we will continue from our project initialisation in the MERN Tutorial 1 - Initialisation blog amd start implementing MongoDB and express into our application. Let us begin. 
+Welcome to the second edition of the MERN Tutorial series. In this blog, we will continue from our project initialisation in the MERN Tutorial 1 - Initialisation blog and start implementing MongoDB and express into our application. Let us begin. 
 
 # Step 1: Set Up MongoDB
 
@@ -551,6 +551,74 @@ Now type http://localhost:5000/tasks into your web browser and you should see so
 
 ![Backend Local Host](assets/mern-tutorial/Backend-Finish.jpg)
 
-As there is no frontend to interact with all we see is the data in the database which is currently empty. To test our database and API connect we can use postman.
+As there is no frontend to interact with all we see is the data in the database which is currently empty. To test our database and API connect we can use postman. To terminate the server press Ctrl+C in the terminal and follow the instructions.
+
+## Step 6.1: Sign Up to Postman
+
+Before we can use Postman you need to create an account and sign in.
+
+## Step 6.2: Create a Workspace
+
+Upon logging into Postman you will be met with th home screen as shown below. First thing we need to do is create a new workspace. To do this go to Workspaces > Create Workspace
+
+![Postman Home](assets/mern-tutorial/postman-home.jpg)
+
+You will then be tasked with choosing a template, a blank template will do. You will then need to choose a name and who can access it.
+
+Upon creating a new workspace you will be met with the workspace overview as shown below. Press the plus next to overview to create a new request. We can now start testing our application.
+
+![Postman Overview](assets/mern-tutorial/postman-overview.jpg)
+
+## Step 6.2: CRUD Testing
+
+Now that we have a new request we will be met with this screen as shown below. 
+
+![Postman Request](assets/mern-tutorial/postman-request.jpg)
+
+First we need to run our application by typing npx nodemon index.js in the terminal:
+
+```terminal
+npx nodemon index.js
+```
+
+Now that our server is running we take the url of our server which should be http://localhost:5000/tasks. Put this into the "Enter URL or paste text" input field and change get to POST. We now want to press body and then raw to post data into our database. Now all we have to do is post something into our database in a JSON format. Lets post something with a title of "hello world!". In the raw section type:
+
+```
+{
+    "title": "hello world!"
+}
+```
+
+Click send and we will get a 201 Created code and receive the following:
+
+![Postman Post](assets/mern-tutorial/postman-post.jpg)
+
+To now read our data we change the POST to GET and raw to none as we are not changing anything just reading. Click send and you will get: 
+
+![Postman Get](assets/mern-tutorial/postman-get.jpg)
+
+To now update our data we need to copy the unique id given to our data and put it in the url for example http://localhost:5000/tasks/673e41bf3fdfeab48ce315a5. Go to body > raw and type:
+
+```
+{
+    "title": "hello world! - updated"
+}
+```
+
+After changing GET to PUT and clicking send our data will successfully update and we will get:
+
+![Postman Put](assets/mern-tutorial/postman-put.jpg)
+
+
+Finally to delete we change PUT to DELETE and input the id of the data we want to delete for example http://localhost:5000/tasks/673e41bf3fdfeab48ce315a5. We change raw to none as we are not updating any data and we click send. Afterwards we get this: 
+
+![Postman Delete](assets/mern-tutorial/postman-delete.jpg)
+
+
+
+
+# Step 7: Conclusion
+
+We have now successfully imopleemnted our backend into our applciation and tested that it works by using postman. All we need to do now is implement our frontend and we have a basic CRUD application. Continue to MERN Tutorial 3 - Frontend to see how we implement our frontend and finalise our application.
 
 
